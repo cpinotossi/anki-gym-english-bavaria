@@ -1,0 +1,36 @@
+# Ignore virtual environment
+.venv/
+venv/
+env/
+.env
+
+# Ignore english folder (contains copyrighted textbook images)
+english/
+
+# Ignore images folder contents (keep folder structure)
+images/*
+!images/.gitkeep
+
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Ignore extracted raw text (copyrighted content)
+extracted_text_raw.txt
+
+# Ignore IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.log
