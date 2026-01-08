@@ -2,14 +2,23 @@
 .venv/
 venv/
 env/
+
+# Ignore environment variables (CREDENTIALS - NEVER COMMIT!)
 .env
 
-# Ignore english folder (contains copyrighted textbook images)
-english/
+# Ignore SQLite database (user-specific data)
+*.db
+vocabulary.db
 
-# Ignore images folder contents (keep folder structure)
-images/*
-!images/.gitkeep
+# Ignore input folder (contains copyrighted textbook images)
+input/
+
+# Ignore output folder (contains copyrighted vocabulary data)
+output/
+
+# Ignore legacy folders
+english/
+images/
 
 # Ignore Python cache
 __pycache__/
@@ -19,6 +28,7 @@ __pycache__/
 
 # Ignore extracted raw text (copyrighted content)
 extracted_text_raw.txt
+raw_*.txt
 
 # Ignore IDE settings
 .vscode/
