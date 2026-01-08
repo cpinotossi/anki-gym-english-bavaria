@@ -384,14 +384,18 @@ def main():
     
     output_folder.mkdir(parents=True, exist_ok=True)
     
-    report_file = output_folder / f"validation_report_{anki_file.stem}.md"
+    # Create tmp subfolder for intermediate files
+    tmp_folder = output_folder / "tmp"
+    tmp_folder.mkdir(parents=True, exist_ok=True)
+    
+    report_file = tmp_folder / f"validation_report_{anki_file.stem}.md"
     
     # Generate deck name from folder structure (e.g., "English Unit-1" or "France Unit-2")
     folder_parts = anki_file.parent.parts[-2:] if len(anki_file.parent.parts) >= 2 else ["Vocabulary"]
     deck_name = " ".join(part.replace("-", " ").title() for part in folder_parts)
     
-    # Final output file replaces original anki file name pattern
-    final_file = output_folder / anki_file.name.replace("anki_", "final_")
+    # Backup original file to tmp folder before overwriting
+    backup_file = tmp_folder / f"{anki_file.stem}_original.txt"
     
     # Load raw text if available
     raw_text = ""
@@ -426,8 +430,13 @@ def main():
     print("\nGenerating reports...")
     generate_report(results, report_file)
     
-    # Create final enriched file with proper deck name
-    final_count, alternatives_count = create_enriched_anki_file(entries, results, final_file, deck_name)
+    # Create backup of original file
+    import shutil
+    shutil.copy(anki_file, backup_file)
+    print(f"Created backup: {backup_file}")
+    
+    # Overwrite original anki file with enriched version
+    final_count, alternatives_count = create_enriched_anki_file(entries, results, anki_file, deck_name)
     
     # Summary
     print(f"\n{'='*70}")
@@ -437,10 +446,12 @@ def main():
     print(f"⚠️  Suspicious entries: {len(results['suspicious'])} (with [Azure: ...] alternatives)")
     print(f"❌ Errors:             {len(results['errors'])}")
     print(f"\nDeck name: {deck_name}")
-    print(f"\nFiles created:")
-    print(f"  - Validation report: {report_file}")
-    print(f"  - Final Anki file:   {final_file}")
+    print(f"\nFiles:")
+    print(f"  - Anki file:         {anki_file} (updated)")
     print(f"    → {final_count} entries total, {alternatives_count} with Azure alternatives")
+    print(f"\nTemp files (in tmp/):")
+    print(f"  - Original backup:   {backup_file.name}")
+    print(f"  - Validation report: {report_file.name}")
     print(f"{'='*70}\n")
 
 
